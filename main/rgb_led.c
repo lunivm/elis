@@ -66,6 +66,13 @@ static void rgb_led_pwm_init(void)
 	g_pwm_init_handle = true;
 }
 
+static void safe_rgb_led_pwm_init(void) {
+	if (g_pwm_init_handle == false)
+	{
+		rgb_led_pwm_init();
+	}
+}
+
 /**
  * Sets the RGB color.
  */
@@ -84,31 +91,19 @@ static void rgb_led_set_color(uint8_t red, uint8_t green, uint8_t blue)
 
 void rgb_led_wifi_app_started(void)
 {
-	if (g_pwm_init_handle == false)
-	{
-		rgb_led_pwm_init();
-	}
-
+	safe_rgb_led_pwm_init();
 	rgb_led_set_color(255, 102, 255);
 }
 
 void rgb_led_http_server_started(void)
 {
-	if (g_pwm_init_handle == false)
-	{
-		rgb_led_pwm_init();
-	}
-
+	safe_rgb_led_pwm_init();
 	rgb_led_set_color(204, 255, 51);
 }
 
 
 void rgb_led_wifi_connected(void)
 {
-	if (g_pwm_init_handle == false)
-	{
-		rgb_led_pwm_init();
-	}
-
+	safe_rgb_led_pwm_init();
 	rgb_led_set_color(0, 255, 153);
 }
