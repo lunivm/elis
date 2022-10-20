@@ -2,7 +2,11 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-//#include "freertos/FreeRTOS.h"
+#include "rgb_led.h"
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 //#include "esp_wifi.h"
 //#include "esp_system.h"
 //#include "esp_event.h"
@@ -13,8 +17,18 @@
 void app_main(void)
 {
     while (true) {
-//    	vTaskDelay(300 / portTICK_PERIOD_MS);
-        printf("Hello from app_main!\n");
-        sleep(1);
+//    	vTaskDelay(1000 / portTICK_PERIOD_MS);
+    	rgb_led_wifi_app_started();
+    	sleep(1);
+
+//    	vTaskDelay(1000 / portTICK_PERIOD_MS);
+    	rgb_led_http_server_started();
+    	sleep(1);
+
+//    	vTaskDelay(1000 / portTICK_PERIOD_MS);
+    	rgb_led_wifi_connected();
+    	sleep(1);
+
+    	printf("New event loop cycle!\n");
     }
 }
