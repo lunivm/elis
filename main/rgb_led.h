@@ -26,13 +26,20 @@ typedef struct
 } ledc_info_t;
 ledc_info_t ledc_ch[RGB_LED_CHANNEL_NUM];
 
+// Indicate main app start
+void rgb_main_app_start(void);
+
 // Indicate wifi app start
-void rgb_led_wifi_app_started(void);
+void rgb_led_wifi_app_start(void);
+// Indicate wifi connected event
+void rgb_led_wifi_connected(void);
+// Indicate AP child connected
+void rgb_led_wifi_ap_child_connected(void);
 
 // Indicate http server start
 void rgb_led_http_server_started(void);
 
-// Indicate wifi connected event
-void rgb_led_wifi_connected(void);
+// Turn off the led
+void rgb_led_none(void);
 
 #endif /* MAIN_RGB_LED_H_ */

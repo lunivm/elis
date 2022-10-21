@@ -78,6 +78,13 @@ static void safe_rgb_led_pwm_init(void) {
  */
 static void rgb_led_set_color(uint8_t red, uint8_t green, uint8_t blue)
 {
+	// reduce led brightness
+	red = red / 100;
+	green = green / 100;
+	blue = blue / 100;
+	
+	safe_rgb_led_pwm_init();
+
 	// Value should be 0 - 255 for 8 bit number
 	ledc_set_duty(ledc_ch[0].mode, ledc_ch[0].channel, red);
 	ledc_update_duty(ledc_ch[0].mode, ledc_ch[0].channel);
@@ -89,21 +96,36 @@ static void rgb_led_set_color(uint8_t red, uint8_t green, uint8_t blue)
 	ledc_update_duty(ledc_ch[2].mode, ledc_ch[2].channel);
 }
 
-void rgb_led_wifi_app_started(void)
-{
-	safe_rgb_led_pwm_init();
-	rgb_led_set_color(255, 102, 255);
+// app
+void rgb_main_app_start(void) {
+	rgb_led_set_color(240, 136, 43);
 }
 
-void rgb_led_http_server_started(void)
+// wifi
+void rgb_led_wifi_app_start(void)
 {
-	safe_rgb_led_pwm_init();
-	rgb_led_set_color(204, 255, 51);
+	rgb_led_set_color(240, 227, 43);
 }
-
 
 void rgb_led_wifi_connected(void)
 {
+	rgb_led_set_color(0, 255, 0);
+}
+
+void rgb_led_wifi_ap_child_connected(void)
+{
+	rgb_led_set_color(250, 0, 0);
+}
+
+// http
+void rgb_led_http_server_started(void)
+{
+	rgb_led_set_color(0, 0, 250);
+}
+
+// none
+void rgb_led_none(void)
+{
 	safe_rgb_led_pwm_init();
-	rgb_led_set_color(0, 255, 153);
+	rgb_led_set_color(0, 0, 0);
 }
