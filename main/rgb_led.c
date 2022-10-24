@@ -97,35 +97,21 @@ static void rgb_led_set_color(uint8_t red, uint8_t green, uint8_t blue)
 }
 
 // app
-void rgb_main_app_start(void) {
-	rgb_led_set_color(240, 136, 43);
-}
-
-// wifi
-void rgb_led_wifi_app_start(void)
-{
-	rgb_led_set_color(240, 227, 43);
-}
-
-void rgb_led_wifi_connected(void)
-{
-	rgb_led_set_color(0, 255, 0);
-}
-
-void rgb_led_wifi_ap_child_connected(void)
-{
-	rgb_led_set_color(250, 0, 0);
-}
-
-// http
-void rgb_led_http_server_started(void)
-{
-	rgb_led_set_color(0, 0, 250);
-}
-
-// none
-void rgb_led_none(void)
-{
-	safe_rgb_led_pwm_init();
-	rgb_led_set_color(0, 0, 0);
+void rgb_send_status_message(rgb_status_message_e message) {
+	switch (message)
+	{
+		case RGB_STATUS_MSG_START_WIFI_APP:
+			rgb_led_set_color(0, 0, 255);
+			
+			break;
+		
+		case RGB_STATUS_MSG_START_HTTP_SERVER:
+			rgb_led_set_color(0, 255, 0);
+			
+			break;
+		
+		case RGB_STATUS_MSG_NONE:
+		default:
+			rgb_led_set_color(0, 0, 0);
+	}
 }

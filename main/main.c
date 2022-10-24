@@ -3,13 +3,10 @@
  */
 
 #include "nvs_flash.h"
-#include "rgb_led.h"
 #include "wifi_app.h"
 
 void app_main(void)
 {
-	rgb_main_app_start();
-	
 	// Initialize NVS
 	esp_err_t ret = nvs_flash_init();
 	if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)

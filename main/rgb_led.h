@@ -26,20 +26,18 @@ typedef struct
 } ledc_info_t;
 ledc_info_t ledc_ch[RGB_LED_CHANNEL_NUM];
 
+/**
+ * Message IDs for the WiFi application task
+ */
+typedef enum rgb_status_message
+{
+	RGB_STATUS_MSG_NONE = 0,
+	RGB_STATUS_MSG_START_APP,
+	RGB_STATUS_MSG_START_WIFI_APP,
+	RGB_STATUS_MSG_START_HTTP_SERVER,
+} rgb_status_message_e;
+
 // Indicate main app start
-void rgb_main_app_start(void);
-
-// Indicate wifi app start
-void rgb_led_wifi_app_start(void);
-// Indicate wifi connected event
-void rgb_led_wifi_connected(void);
-// Indicate AP child connected
-void rgb_led_wifi_ap_child_connected(void);
-
-// Indicate http server start
-void rgb_led_http_server_started(void);
-
-// Turn off the led
-void rgb_led_none(void);
+void rgb_send_status_message(rgb_status_message_e message);
 
 #endif /* MAIN_RGB_LED_H_ */

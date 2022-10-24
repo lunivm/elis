@@ -62,16 +62,12 @@ static void wifi_app_event_handler(void *arg, esp_event_base_t event_base, int32
 			
 			case WIFI_EVENT_AP_STACONNECTED:
 				ESP_LOGI(TAG, "WIFI_EVENT_AP_STACONNECTED");
-				
-				rgb_led_wifi_ap_child_connected();
-			
+							
 				break;
 
 			case WIFI_EVENT_AP_STADISCONNECTED:
 				ESP_LOGI(TAG, "WIFI_EVENT_AP_STADISCONNECTED");
-				
-				rgb_led_none();
-				
+								
 				break;
 
 			case WIFI_EVENT_STA_CONNECTED:
@@ -198,7 +194,7 @@ static void wifi_app_task(void *pvParameters)
 					ESP_LOGI(TAG, "WIFI_APP_MSG_START_HTTP_SERVER");
 					
 					http_server_start();
-					rgb_led_http_server_started();
+					rgb_send_status_message(RGB_STATUS_MSG_START_HTTP_SERVER);
 					
 					break;
 				
@@ -209,7 +205,6 @@ static void wifi_app_task(void *pvParameters)
 				
 				case WIFI_APP_MSG_STA_CONNECTED_GOT_IP:
 					ESP_LOGI(TAG, "WIFI_APP_MSG_STA_CONNECTED_GOT_IP");
-					rgb_led_wifi_connected();
 				
 					break;
 				
@@ -233,9 +228,6 @@ void wifi_app_start(void)
 {
 	ESP_LOGI(TAG, "Starting wifi application");
 		
-	// rgb indication
-	rgb_led_wifi_app_start();
-
 	// Disable default wifi loggin messages
 	esp_log_level_set("wifi",  ESP_LOG_NONE);
 	
@@ -244,4 +236,7 @@ void wifi_app_start(void)
 	
 	// Start wifi app
 	xTaskCreatePinnedToCore(&wifi_app_task, "wifi_app_task", WIFI_APP_TASK_STACK_SIZE, NULL, WIFI_APP_TASK_PRIORITY, NULL, WIFI_APP_TASK_CORE_ID);
+	
+	// rgb indication
+	rgb_send_status_message(RGB_STATUS_MSG_START_WIFI_APP);
 }
