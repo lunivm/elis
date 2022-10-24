@@ -17,6 +17,7 @@
 #include "rgb_led.h"
 #include "tasks_common.h"
 #include "wifi_app.h"
+#include "http_server.h"
 
 // Tag used for ESP serial console messages
 static const char TAG [] = "wifi_app";
@@ -43,7 +44,10 @@ static void wifi_app_event_handler(void *arg, esp_event_base_t event_base, int32
 		{
 			case WIFI_EVENT_AP_START:
 				ESP_LOGI(TAG, "WIFI_EVENT_AP_START");
-			
+				
+				// Send queue message to start http server
+				wifi_app_send_message(WIFI_APP_MSG_START_HTTP_SERVER);
+
 				break;
 
 			case WIFI_EVENT_AP_STOP:
@@ -184,9 +188,6 @@ static void wifi_app_task(void *pvParameters)
 	// Start WiFi
 	ESP_ERROR_CHECK(esp_wifi_start());
 
-	// Send first event message
-	wifi_app_send_message(WIFI_APP_MSG_START_HTTP_SERVER);
-
 	for (;;)
 	{
 		if (xQueueReceive(wifi_app_queue_handle, &msg, portMAX_DELAY))
@@ -195,6 +196,8 @@ static void wifi_app_task(void *pvParameters)
 			{
 				case WIFI_APP_MSG_START_HTTP_SERVER:
 					ESP_LOGI(TAG, "WIFI_APP_MSG_START_HTTP_SERVER");
+					
+					http_server_start();
 					rgb_led_http_server_started();
 					
 					break;
