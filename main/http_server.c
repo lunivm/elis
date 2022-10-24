@@ -1,10 +1,3 @@
-/*
- * http_server.c
- *
- *  Created on: Oct 24, 2022
- *      Author: mykolaluniv
- */
-
 #include "esp_http_server.h"
 #include "esp_log.h"
 #include "esp_ota_ops.h"
@@ -56,7 +49,7 @@ static httpd_handle_t http_server_configure(void)
 {
 	// Generate the default configuration
 	httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-	
+
 	// Create the message queue
 	http_server_monitor_queue_handle = xQueueCreate(3, sizeof(http_server_queue_message_t));
 
@@ -80,16 +73,16 @@ static httpd_handle_t http_server_configure(void)
 			"http_server_configure: Starting server on port: '%d' with task priority: '%d'",
 			config.server_port,
 			config.task_priority);
-	
+
 	const esp_err_t startup_code = httpd_start(&http_server_handle, &config);
 	if (startup_code != ESP_OK)
 	{
 		ESP_LOGI(TAG, "http_server_configure: Starting server error - %s", esp_err_to_name(startup_code));
 		return NULL;
 	}
-	
+
 	ESP_LOGI(TAG, "http_server_configure: Registering URI handlers");
-	
+
 	return http_server_handle;
 }
 

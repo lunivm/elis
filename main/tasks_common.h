@@ -1,10 +1,3 @@
-/*
- * tasks_common.h
- *
- *  Created on: Oct 21, 2022
- *      Author: mykolaluniv
- */
-
 #ifndef MAIN_TASKS_COMMON_H_
 #define MAIN_TASKS_COMMON_H_
 

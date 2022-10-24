@@ -1,10 +1,3 @@
-/*
- * wifi_app.c
- *
- *  Created on: Oct 21, 2022
- *      Author: mykolaluniv
- */
-
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
 #include "freertos/task.h"
@@ -44,7 +37,7 @@ static void wifi_app_event_handler(void *arg, esp_event_base_t event_base, int32
 		{
 			case WIFI_EVENT_AP_START:
 				ESP_LOGI(TAG, "WIFI_EVENT_AP_START");
-				
+
 				// Send queue message to start http server
 				wifi_app_send_message(WIFI_APP_MSG_START_HTTP_SERVER);
 
@@ -52,32 +45,32 @@ static void wifi_app_event_handler(void *arg, esp_event_base_t event_base, int32
 
 			case WIFI_EVENT_AP_STOP:
 				ESP_LOGI(TAG, "WIFI_EVENT_AP_STOP");
-				
+
 				break;
-			
+
 			case WIFI_EVENT_STA_START:
 				ESP_LOGI(TAG, "WIFI_EVENT_STA_START");
-			
+
 				break;
-			
+
 			case WIFI_EVENT_AP_STACONNECTED:
 				ESP_LOGI(TAG, "WIFI_EVENT_AP_STACONNECTED");
-							
+
 				break;
 
 			case WIFI_EVENT_AP_STADISCONNECTED:
 				ESP_LOGI(TAG, "WIFI_EVENT_AP_STADISCONNECTED");
-								
+
 				break;
 
 			case WIFI_EVENT_STA_CONNECTED:
 				ESP_LOGI(TAG, "WIFI_EVENT_STA_CONNECTED");
-				
+
 				break;
 
 			case WIFI_EVENT_STA_DISCONNECTED:
 				ESP_LOGI(TAG, "WIFI_EVENT_STA_DISCONNECTED");
-				
+
 				break;
 		}
 	}
@@ -145,11 +138,11 @@ static void wifi_app_soft_ap_config(void)
 				.beacon_interval = WIFI_AP_BEACON_INTERVAL,
 		},
 	};
-	
+
 	// Configure DHCP for the AP
 	esp_netif_ip_info_t ap_ip_info;
 	memset(&ap_ip_info, 0x00, sizeof(ap_ip_info));
-	
+
 	esp_netif_dhcps_stop(esp_netif_ap);					///> must call this first
 	inet_pton(AF_INET, WIFI_AP_IP, &ap_ip_info.ip);		///> Assign access point's static IP, GW, and netmask
 	inet_pton(AF_INET, WIFI_AP_GATEWAY, &ap_ip_info.gw);
@@ -192,22 +185,22 @@ static void wifi_app_task(void *pvParameters)
 			{
 				case WIFI_APP_MSG_START_HTTP_SERVER:
 					ESP_LOGI(TAG, "WIFI_APP_MSG_START_HTTP_SERVER");
-					
+
 					http_server_start();
 					rgb_send_status_message(RGB_STATUS_MSG_START_HTTP_SERVER);
-					
+
 					break;
-				
+
 				case WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER:
 					ESP_LOGI(TAG, "WIFI_APP_MSG_CONNECTING_FROM_HTTP_SERVER");
 
 					break;
-				
+
 				case WIFI_APP_MSG_STA_CONNECTED_GOT_IP:
 					ESP_LOGI(TAG, "WIFI_APP_MSG_STA_CONNECTED_GOT_IP");
-				
+
 					break;
-				
+
 				default:
 					break;
 			}
@@ -220,23 +213,23 @@ BaseType_t wifi_app_send_message(wifi_app_message_e msgID)
 {
 	wifi_app_queue_message_t msg;
 	msg.msgID = msgID;
-	
+
 	return xQueueSend(wifi_app_queue_handle, &msg, portMAX_DELAY);
 }
 
-void wifi_app_start(void) 
+void wifi_app_start(void)
 {
 	ESP_LOGI(TAG, "Starting wifi application");
-		
+
 	// Disable default wifi loggin messages
 	esp_log_level_set("wifi",  ESP_LOG_NONE);
-	
+
 	// Create message queue
 	wifi_app_queue_handle = xQueueCreate(3, sizeof(wifi_app_queue_message_t));
-	
+
 	// Start wifi app
 	xTaskCreatePinnedToCore(&wifi_app_task, "wifi_app_task", WIFI_APP_TASK_STACK_SIZE, NULL, WIFI_APP_TASK_PRIORITY, NULL, WIFI_APP_TASK_CORE_ID);
-	
+
 	// rgb indication
 	rgb_send_status_message(RGB_STATUS_MSG_START_WIFI_APP);
 }

@@ -1,10 +1,3 @@
-/*
- * rgb_led.c
- *
- *  Created on: Oct 20, 2022
- *      Author: mykolaluniv
- */
-
 #include <stdbool.h>
 
 #include "driver/ledc.h"
@@ -21,7 +14,7 @@ static void rgb_led_pwm_init(void)
 	int rgb_ch;
 
 	// Red
-	ledc_ch[0].channel		= LEDC_CHANNEL_0;
+	ledc_ch[0].channel = LEDC_CHANNEL_0;
 	ledc_ch[0].gpio   		= RGB_LED_RED_GPIO;
 	ledc_ch[0].mode			= LEDC_HIGH_SPEED_MODE;
 	ledc_ch[0].timer_index		= LEDC_TIMER_0;
@@ -82,7 +75,7 @@ static void rgb_led_set_color(uint8_t red, uint8_t green, uint8_t blue)
 	red = red / 100;
 	green = green / 100;
 	blue = blue / 100;
-	
+
 	safe_rgb_led_pwm_init();
 
 	// Value should be 0 - 255 for 8 bit number
@@ -102,14 +95,14 @@ void rgb_send_status_message(rgb_status_message_e message) {
 	{
 		case RGB_STATUS_MSG_START_WIFI_APP:
 			rgb_led_set_color(0, 0, 255);
-			
+
 			break;
-		
+
 		case RGB_STATUS_MSG_START_HTTP_SERVER:
 			rgb_led_set_color(0, 255, 0);
-			
+
 			break;
-		
+
 		case RGB_STATUS_MSG_NONE:
 		default:
 			rgb_led_set_color(0, 0, 0);

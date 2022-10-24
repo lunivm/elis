@@ -1,10 +1,3 @@
-/*
- * http_server.h
- *
- *  Created on: Oct 20, 2021
- *      Author: kjagu
- */
-
 #ifndef MAIN_HTTP_SERVER_H_
 #define MAIN_HTTP_SERVER_H_
 

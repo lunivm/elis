@@ -1,10 +1,3 @@
-/*
- * wifi_app.h
- *
- *  Created on: Oct 21, 2022
- *      Author: mykolaluniv
- */
-
 #ifndef MAIN_WIFI_APP_H_
 #define MAIN_WIFI_APP_H_
 

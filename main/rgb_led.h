@@ -1,10 +1,3 @@
-/*
- * rgb_led.h
- *
- *  Created on: Oct 20, 2022
- *      Author: mykolaluniv
- */
-
 #ifndef MAIN_RGB_LED_H_
 #define MAIN_RGB_LED_H_
 

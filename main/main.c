@@ -1,7 +1,3 @@
-/**
- * Application entry point
- */
-
 #include "nvs_flash.h"
 #include "wifi_app.h"
 
@@ -15,7 +11,7 @@ void app_main(void)
 		ret = nvs_flash_init();
 	}
 	ESP_ERROR_CHECK(ret);
-	
+
 	// Start wifi
 	wifi_app_start();
 }
