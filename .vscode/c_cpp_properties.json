@@ -3,8 +3,8 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
-                "/Users/mykolaluniv/esp/esp-idf/components/**"
+                "${config:idf.espIdfPath}/components/**",
+                "${workspaceFolder}/**"
             ],
             "macFrameworkPath": [
                 "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"

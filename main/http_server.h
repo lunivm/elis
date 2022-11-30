@@ -28,6 +28,7 @@ typedef enum http_server_message
 	HTTP_MSG_WIFI_USER_DISCONNECT,
 	HTTP_MSG_OTA_UPDATE_SUCCESSFUL,
 	HTTP_MSG_OTA_UPDATE_FAILED,
+	HTTP_MSG_OTA_UPDATE_INITIALIZED,
 	HTTP_MSG_TIME_SERVICE_INITIALIZED,
 } http_server_message_e;
 
@@ -43,7 +44,6 @@ typedef struct http_server_queue_message
  * Sends a message to the queue
  * @param msgID message ID from the http_server_message_e enum.
  * @return pdTRUE if an item was successfully sent to the queue, otherwise pdFALSE.
- * @note Expand the parameter list based on your requirements e.g. how you've expanded the http_server_queue_message_t.
  */
 BaseType_t http_server_monitor_send_message(http_server_message_e msgID);
 
