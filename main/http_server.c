@@ -24,7 +24,7 @@ static const char TAG[] = "http_server";
 static httpd_handle_t http_server_handle = NULL;
 
 // HTTP server monitor task handle
-//static TaskHandle_t task_http_server_monitor = NULL;
+static TaskHandle_t task_http_server_monitor = NULL;
 
 // Queue handle used to manipulate the main queue of events
 static QueueHandle_t http_server_monitor_queue_handle;
@@ -40,6 +40,74 @@ extern const uint8_t app_js_start[]					asm("_binary_app_js_start");
 extern const uint8_t app_js_end[]					asm("_binary_app_js_end");
 extern const uint8_t favicon_ico_start[]			asm("_binary_favicon_ico_start");
 extern const uint8_t favicon_ico_end[]				asm("_binary_favicon_ico_end");
+
+/**
+ * HTTP server monitor task used to track events of the HTTP server
+ * @param pvParameters parameter which can be passed to the task.
+ */
+static void http_server_monitor(void *parameter)
+{
+	http_server_queue_message_t msg;
+
+	for (;;)
+	{
+		if (xQueueReceive(http_server_monitor_queue_handle, &msg, portMAX_DELAY))
+		{
+			switch (msg.msgID)
+			{
+				case HTTP_MSG_WIFI_CONNECT_INIT:
+					ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_INIT");
+
+					// g_wifi_connect_status = HTTP_WIFI_STATUS_CONNECTING;
+
+					break;
+
+				case HTTP_MSG_WIFI_CONNECT_SUCCESS:
+					ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_SUCCESS");
+
+					// g_wifi_connect_status = HTTP_WIFI_STATUS_CONNECT_SUCCESS;
+
+					break;
+
+				case HTTP_MSG_WIFI_CONNECT_FAIL:
+					ESP_LOGI(TAG, "HTTP_MSG_WIFI_CONNECT_FAIL");
+
+					// g_wifi_connect_status = HTTP_WIFI_STATUS_CONNECT_FAILED;
+
+					break;
+
+				case HTTP_MSG_WIFI_USER_DISCONNECT:
+					ESP_LOGI(TAG, "HTTP_MSG_WIFI_USER_DISCONNECT");
+
+					// g_wifi_connect_status = HTTP_WIFI_STATUS_DISCONNECTED;
+
+					break;
+
+				case HTTP_MSG_OTA_UPDATE_SUCCESSFUL:
+					ESP_LOGI(TAG, "HTTP_MSG_OTA_UPDATE_SUCCESSFUL");
+					// g_fw_update_status = OTA_UPDATE_SUCCESSFUL;
+					// http_server_fw_update_reset_timer();
+
+					break;
+
+				case HTTP_MSG_OTA_UPDATE_FAILED:
+					ESP_LOGI(TAG, "HTTP_MSG_OTA_UPDATE_FAILED");
+					// g_fw_update_status = OTA_UPDATE_FAILED;
+
+					break;
+
+				case HTTP_MSG_TIME_SERVICE_INITIALIZED:
+					ESP_LOGI(TAG, "HTTP_MSG_TIME_SERVICE_INITIALIZED");
+					// g_is_local_time_set = true;
+
+					break;
+
+				default:
+					break;
+			}
+		}
+	}
+}
 
 /**
  * Jquery get handler is requested when accessing the web page.
@@ -124,6 +192,9 @@ static httpd_handle_t http_server_configure(void)
 {
 	// Generate the default configuration
 	httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+
+	// Create HTTP server monitor task
+	xTaskCreatePinnedToCore(&http_server_monitor, "http_server_monitor", HTTP_SERVER_MONITOR_STACK_SIZE, NULL, HTTP_SERVER_MONITOR_PRIORITY, &task_http_server_monitor, HTTP_SERVER_MONITOR_CORE_ID);
 
 	// Create the message queue
 	http_server_monitor_queue_handle = xQueueCreate(3, sizeof(http_server_queue_message_t));
@@ -222,10 +293,11 @@ void http_server_stop(void)
 		ESP_LOGI(TAG, "http_server_stop: stopping HTTP server");
 		http_server_handle = NULL;
 	}
-//	if (task_http_server_monitor)
-//	{
-//		vTaskDelete(task_http_server_monitor);
-//		ESP_LOGI(TAG, "http_server_stop: stopping HTTP server monitor");
-//		task_http_server_monitor = NULL;
-//	}
+
+	if (task_http_server_monitor)
+	{
+		vTaskDelete(task_http_server_monitor);
+		ESP_LOGI(TAG, "http_server_stop: stopping HTTP server monitor");
+		task_http_server_monitor = NULL;
+	}
 }
