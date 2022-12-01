@@ -1,6 +1,6 @@
 {
   "idf.adapterTargetName": "esp32",
-  "idf.port": "/dev/cu.usbserial-141120",
+  "idf.port": "/dev/cu.usbserial-142120",
   "idf.flashType": "UART",
   "files.associations": {
     "rgb_led.h": "c",
@@ -12,7 +12,12 @@
     "esp_ota_ops.h": "c",
     "portmacro.h": "c",
     "esp_newlib.h": "c",
-    "reent.h": "c"
+    "reent.h": "c",
+    "http_server.h": "c",
+    "esp_wifi.h": "c",
+    "param.h": "c",
+    "_null.h": "c",
+    "_types.h": "c"
   },
   "C_Cpp.autocompleteAddParentheses": false
 }
